@@ -25,44 +25,32 @@ mongodb.connect(
 
 async function addDataToMongo() {
   try {
-    axios.get('https://reqres.in/api/users').then((res) => {
-      const people = res.data.data;
-      let apiPeopleData = people.map((person) => {
-        const { email, first_name, last_name, avatar } = person;
-        return { email, first_name, last_name, avatar };
-      });
-      db.collection('Users').deleteMany({}, function (err, info) {
-        console.log('Collection deleted');
-      });
-      db.collection('Users').insertMany(apiPeopleData, function (err, info) {
-        console.log('Collection inserted');
-      });
+    const res = await Promise.all([
+      axios.get('https://reqres.in/api/users?page=1'),
+      axios.get('https://reqres.in/api/users?page=2'),
+    ]);
 
-      // Альтернативное решение как обновлять базу MongoDB
-      // (async function () {
-      //   try {
-      //     const peopleFromMongodb = await db.collection('Users').find({}).toArray();
-      //     const mongoPeopleEmail = peopleFromMongodb.map(person => person.email);
-      //     const arrayOfNewPeople = [];
-      //     for (let person of apiPeopleData) {
-      //       if (mongoPeopleEmail.indexOf(person.email) === -1) {
-      //         arrayOfNewPeople.push(person);
-      //       }
-      //     }
-      //     console.log(arrayOfNewPeople);
-      //     if (arrayOfNewPeople.length) {
-      //       db.collection('Users').insertMany(arrayOfNewPeople, function (err, info) {
-      //           console.log('Collection inserted');
-      //         })
-      //     }
-      //   } catch (err) {
-      //     console.log('Error with mongo database');
-      //   }
-      // })();
-
+    const people = res.map((res) => res.data.data).flat();
+    let apiPeopleData = people.map((person) => {
+      const { email, first_name, last_name, avatar } = person;
+      return { email, first_name, last_name, avatar };
     });
-  } catch (err) {
-    throw Error('Axios get did not work');
+
+    apiPeopleData.forEach((person) => {
+      db.collection('Users').update(
+        { email: person.email },
+        { $setOnInsert: person },
+        { upsert: true },
+        function (err, result) {
+          if (err) {
+            console.log('Error occured with mongodb');
+          }
+        }
+      );
+    });
+    console.log('Database updated');
+  } catch {
+    throw Error('Axios did not work');
   }
 }
 
@@ -74,7 +62,7 @@ app.post('/', function (req, res) {
     .split(' ')
     .filter(Boolean)
     .map((word) => word[0].toUpperCase() + word.split('').slice(1).join(''));
-    
+
   if (filteredPersonInfo.length === 2) {
     db.collection('Users').findOne(
       { first_name: filteredPersonInfo[0], last_name: filteredPersonInfo[1] },
@@ -94,4 +82,4 @@ app.post('/', function (req, res) {
 
 app.get('*', (req, res) => {
   res.redirect('http://localhost:3000/');
-})
+});
