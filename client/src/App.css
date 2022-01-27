@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Jost:wght@400&display=swap');
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+body {
+  background-color: antiquewhite;
+}
+
+.App {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  
+}
+
+.logo-name {
+  margin: 30px auto;
+  font-family: 'Comfortaa', Helvetica, sans-serif;
+  font-size: 2.5rem;
+}
+
+/* Forms */
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 35%;
+
+}
+
+.form label,
+.form input,
+.form button {
+  margin: 5px;
+  font-family: 'Jost', Helvetica, sans-serif;
+}
+
+.form label {
+  font-size: 1.5rem;
+}
+
+.form input {
+  font-size: 1.1rem;
+  padding: 3px 5px;
+  background-color: azure;
+  outline: none;
+  color: black;
+  border: solid black 2px;
+}
+
+.form button {
+  color: black;
+  background-color: transparent;
+  border: 2px solid;
+  border-radius: 0px;
+  margin: 10px 100px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  -webkit-transition: ease-out 0.4s;
+  -moz-transition: ease-out 0.4s;
+  transition: ease-out 0.4s;
+  font-family: "Jost", Helvetica, sans-serif;
+  font-size: 1.2rem;
+  border-color: rgb(2, 59, 216);
+  box-shadow: inset 0 0 0 0 rgb(2, 59, 216);
+}
+
+.form button:hover {
+  color: white;
+  box-shadow: inset 400px 0 0 0 rgb(2, 59, 216);
+}
+
+/* Info */
+
+/* .person-info {
+  text-align: center;
+} */
+
+.not-found {
+  margin: 50px;
+  font-family: "Jost", Helvetica, sans-serif;
+}
+
+.not-found img {
+  height: 150px;
+  margin: 20px;
+}
+
+.person {
+  display: flex;
+  margin: 100px auto 100px 30%;
+}
+
+.person-image,
+.person-credentials {
+  margin: 10px 30px;
+}
+
+.person-credentials {
+  font-size: 0.8rem;
+  font-family: "Jost", Helvetica, sans-serif;
+}
